@@ -74,7 +74,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Filter functionality for picks
+// Filter functionality for project cards
 const filterBtns = document.querySelectorAll('.filter-btn');
 const pickCards = document.querySelectorAll('.pick-card');
 
@@ -168,6 +168,10 @@ const declineCookiesBtn = document.getElementById('declineCookies');
 // Check if user has already made a cookie choice
 function checkCookieConsent() {
     const cookieConsent = localStorage.getItem('cookieConsent');
+    if (!cookieNotice) {
+        return;
+    }
+
     if (!cookieConsent) {
         // Show cookie notice after a short delay
         setTimeout(() => {
@@ -208,7 +212,9 @@ function trackEvent(eventName, eventData) {
 if (acceptCookiesBtn) {
     acceptCookiesBtn.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'accepted');
-        cookieNotice.classList.remove('show');
+        if (cookieNotice) {
+            cookieNotice.classList.remove('show');
+        }
         initializeTracking();
         trackEvent('cookie_consent', { action: 'accepted' });
     });
@@ -218,7 +224,9 @@ if (acceptCookiesBtn) {
 if (declineCookiesBtn) {
     declineCookiesBtn.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'declined');
-        cookieNotice.classList.remove('show');
+        if (cookieNotice) {
+            cookieNotice.classList.remove('show');
+        }
         console.log('🍪 Cookie tracking declined');
         trackEvent('cookie_consent', { action: 'declined' });
     });

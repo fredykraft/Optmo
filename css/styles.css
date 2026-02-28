@@ -1,4 +1,4 @@
-/* Global Styles */
+/* OPTMO Website - Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -521,7 +521,7 @@ body {
     transform: translateX(5px);
 }
 
-/* Picks Section */
+/* Projects Section */
 .picks-section {
     padding: 60px 20px;
     background: var(--neutral-light);
@@ -902,7 +902,7 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Portfolio Section */
+/* Platform Statistics Section */
 .portfolio-section {
     padding: 60px 20px;
     background: var(--neutral-light);
