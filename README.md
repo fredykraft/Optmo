@@ -21,6 +21,7 @@ OPTMO is a responsive single-page website for an AI-powered automation platform 
 ```
 .
 ├── index.html
+├── donate.html
 ├── css/
 │   └── styles.css
 ├── js/
@@ -50,10 +51,24 @@ python -m http.server 8000
 - Smooth scrolling for internal anchor links
 - Cookie consent storage in `localStorage`
 
+## Donate Page
+
+- Public support page is available at `donate.html`.
+- When hosted on GitHub Pages, visitors can open `/donate.html`.
+
+## Secure Analytics Password Setup
+
+1. Copy `js/private-config.example.js` to `js/private-config.js`.
+2. Set `window.OPTMO_ANALYTICS_PASSWORD` in `js/private-config.js`.
+3. Keep `js/private-config.js` uncommitted (already ignored by `.gitignore`).
+
+This keeps the analytics password out of GitHub history.
+
 ## Notes
 
 - The website is fully static and requires no build step.
 - Analytics hooks in `js/main.js` are placeholders for real tracking integrations.
+- For production-grade secrecy, validate passwords server-side (client-side static code cannot fully hide secrets from end users).
 
 ---
 

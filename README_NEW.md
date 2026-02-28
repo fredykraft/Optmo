@@ -13,6 +13,10 @@ This file is a quick reference for maintaining the current OPTMO website impleme
 - Platform statistics table
 - Footer and cookie consent banner
 
+## Additional Page
+
+- `donate.html` provides a public donation/support page for GitHub Pages visitors.
+
 ## Styling Notes (css/styles.css)
 
 - Uses CSS custom properties in `:root` for branding and spacing
@@ -25,7 +29,8 @@ This file is a quick reference for maintaining the current OPTMO website impleme
 - Applies smooth-scroll and active-nav updates
 - Filters project cards by selected category
 - Stores cookie consent in `localStorage`
-- Includes placeholder tracking hooks (`trackEvent`)
+- Gates analytics tracking behind consent + password validation
+- Reads analytics password from `window.OPTMO_ANALYTICS_PASSWORD`
 
 ## Quick Start
 
@@ -40,5 +45,6 @@ Then open `http://localhost:8000`.
 - Keep section IDs and navigation links in sync
 - Keep filter button values aligned with project card `data-filter`
 - Validate cookie banner IDs before modifying tracking logic
+- Keep `js/private-config.js` local only (never commit)
 
 Last updated: February 28, 2026

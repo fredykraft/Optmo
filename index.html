@@ -407,6 +407,7 @@
                             <li><a href="#about">About Us</a></li>
                             <li><a href="#portfolio">Projects</a></li>
                             <li><a href="#home">Get Started</a></li>
+                            <li><a href="donate.html">Donate</a></li>
                         </ul>
                     </div>
                     <div class="footer-section">
@@ -416,6 +417,7 @@
                             <li><a href="#about">Documentation</a></li>
                             <li><a href="#pricing">API Access</a></li>
                             <li><a href="#about">System Status</a></li>
+                            <li><a href="donate.html">Support OPTMO</a></li>
                         </ul>
                     </div>
                 </div>
@@ -433,15 +435,21 @@
     <div class="cookie-notice" id="cookieNotice">
         <p>
             <strong>🍪 We use cookies to enhance your experience</strong><br>
-            We use cookies and similar tracking technologies to analyze user behavior, personalize content, and improve our automation features. By continuing to use OPTMO, you consent to our use of cookies. 
-            <a href="#privacy">Learn more</a>
+            OPTMO always uses essential cookies for core functionality. Optional analytics runs only when consent is accepted and the analytics password is provided.
+            <a href="#home">Learn more</a>
         </p>
+        <div class="cookie-auth">
+            <label for="analyticsPassword">Analytics Password</label>
+            <input type="password" id="analyticsPassword" placeholder="Enter analytics password" autocomplete="off">
+            <small id="cookieStatus" aria-live="polite"></small>
+        </div>
         <div class="cookie-buttons">
             <button class="cookie-btn decline" id="declineCookies">Decline</button>
             <button class="cookie-btn accept" id="acceptCookies">Accept All</button>
         </div>
     </div>
 
+    <script src="js/private-config.js"></script>
     <script src="js/main.js"></script>
 
 </body>

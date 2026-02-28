@@ -164,6 +164,34 @@ if (ctaButton) {
 const cookieNotice = document.getElementById('cookieNotice');
 const acceptCookiesBtn = document.getElementById('acceptCookies');
 const declineCookiesBtn = document.getElementById('declineCookies');
+const analyticsPasswordInput = document.getElementById('analyticsPassword');
+const cookieStatus = document.getElementById('cookieStatus');
+const runtimeAnalyticsPassword = window.OPTMO_ANALYTICS_PASSWORD;
+
+function isAnalyticsEnabled() {
+    return localStorage.getItem('analyticsEnabled') === 'true';
+}
+
+function setCookieStatus(message, type = '') {
+    if (!cookieStatus) {
+        return;
+    }
+
+    cookieStatus.textContent = message;
+    cookieStatus.classList.remove('success', 'error');
+    if (type) {
+        cookieStatus.classList.add(type);
+    }
+}
+
+function hasValidAnalyticsPassword() {
+    if (!runtimeAnalyticsPassword || !analyticsPasswordInput) {
+        return false;
+    }
+
+    const enteredPassword = analyticsPasswordInput.value.trim();
+    return enteredPassword.length > 0 && enteredPassword === runtimeAnalyticsPassword;
+}
 
 // Check if user has already made a cookie choice
 function checkCookieConsent() {
@@ -178,8 +206,9 @@ function checkCookieConsent() {
             cookieNotice.classList.add('show');
         }, 1000);
     } else if (cookieConsent === 'accepted') {
-        // Initialize tracking if cookies were accepted
-        initializeTracking();
+        if (isAnalyticsEnabled()) {
+            initializeTracking();
+        }
     }
 }
 
@@ -201,7 +230,7 @@ function initializeTracking() {
 
 // Track events (placeholder for actual tracking)
 function trackEvent(eventName, eventData) {
-    if (localStorage.getItem('cookieConsent') === 'accepted') {
+    if (localStorage.getItem('cookieConsent') === 'accepted' && isAnalyticsEnabled()) {
         console.log('📊 Tracking event:', eventName, eventData);
         // Send to analytics service
         // Example: gtag('event', eventName, eventData);
@@ -212,11 +241,25 @@ function trackEvent(eventName, eventData) {
 if (acceptCookiesBtn) {
     acceptCookiesBtn.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'accepted');
-        if (cookieNotice) {
-            cookieNotice.classList.remove('show');
+
+        if (!runtimeAnalyticsPassword) {
+            localStorage.setItem('analyticsEnabled', 'false');
+            setCookieStatus('Analytics password is not configured on this environment.', 'error');
+            if (cookieNotice) {
+                cookieNotice.classList.remove('show');
+            }
+        } else if (!hasValidAnalyticsPassword()) {
+            localStorage.setItem('analyticsEnabled', 'false');
+            setCookieStatus('Incorrect analytics password. Essential cookies remain enabled.', 'error');
+        } else {
+            localStorage.setItem('analyticsEnabled', 'true');
+            setCookieStatus('Analytics enabled for this browser.', 'success');
+            initializeTracking();
+            trackEvent('cookie_consent', { action: 'accepted_analytics' });
+            if (cookieNotice) {
+                cookieNotice.classList.remove('show');
+            }
         }
-        initializeTracking();
-        trackEvent('cookie_consent', { action: 'accepted' });
     });
 }
 
@@ -224,9 +267,11 @@ if (acceptCookiesBtn) {
 if (declineCookiesBtn) {
     declineCookiesBtn.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'declined');
+        localStorage.setItem('analyticsEnabled', 'false');
         if (cookieNotice) {
             cookieNotice.classList.remove('show');
         }
+        setCookieStatus('Analytics disabled.', '');
         console.log('🍪 Cookie tracking declined');
         trackEvent('cookie_consent', { action: 'declined' });
     });
