@@ -2,6 +2,12 @@
 
 OPTMO is a responsive single-page website for an AI-powered automation platform focused on content creation and event organization.
 
+## Support OPTMO
+
+- GitHub Sponsors: https://github.com/sponsors/fredykraft
+- Donate Page: https://fredykraft.github.io/Optmo/donate.html
+- PayPal: https://www.paypal.com/donate/?business=saygoodnight88%40gmail.com
+
 ## Overview
 
 - Content workflows: podcasts, videos, and music production
