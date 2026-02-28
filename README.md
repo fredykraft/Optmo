@@ -1,5 +1,7 @@
 # OPTMO Website
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-OPTMO-ff69b4?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/fredykraft)
+
 OPTMO is a responsive single-page website for an AI-powered automation platform focused on content creation and event organization.
 
 ## Support OPTMO
