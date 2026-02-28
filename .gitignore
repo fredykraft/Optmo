@@ -1,2 +1,16 @@
 .DS_Store
 js/private-config.js
+.env
+.env.*
+*.local
+*.secret
+*.secrets
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+id_rsa
+id_ed25519
