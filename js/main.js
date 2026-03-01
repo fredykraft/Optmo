@@ -579,6 +579,15 @@ function initSidebarResize() {
     });
 }
 
+// Logout function for homepage
+function logoutFromHome() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('optmo_logged_in');
+        localStorage.removeItem('optmo_user');
+        location.reload();
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('OPTMO website loaded and interactive features initialized');
