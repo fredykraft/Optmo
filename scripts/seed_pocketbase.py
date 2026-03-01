@@ -8,8 +8,12 @@ import urllib.request
 
 BASE_URL = os.getenv("POCKETBASE_URL", "http://127.0.0.1:8090").rstrip("/")
 EMAIL = os.getenv("SEED_EMAIL", "demo@optmo.app")
-PASSWORD = os.getenv("SEED_PASSWORD", "Demo12345!")
+PASSWORD = os.getenv("SEED_PASSWORD")
 NAME = os.getenv("SEED_NAME", "Demo User")
+LEGACY_SEED_PASSWORD = os.getenv("SEED_PASSWORD_LEGACY", "Demo12345!")
+
+if not PASSWORD:
+    PASSWORD = f"DemoSeed-{abs(hash(EMAIL)) % 100000000:08d}!"
 
 
 def api_request(method, path, payload=None, token=None):
@@ -63,20 +67,30 @@ def ensure_user():
 
 
 def auth_user():
-    auth = api_request(
-        "POST",
-        "/api/collections/users/auth-with-password",
-        {"identity": EMAIL, "password": PASSWORD},
-    )
-    token = auth.get("token")
-    record = auth.get("record") or {}
-    user_id = record.get("id")
+    candidate_passwords = [PASSWORD]
+    if LEGACY_SEED_PASSWORD and LEGACY_SEED_PASSWORD != PASSWORD:
+        candidate_passwords.append(LEGACY_SEED_PASSWORD)
 
-    if not token or not user_id:
-        raise RuntimeError("Unable to authenticate seeded user.")
+    for candidate in candidate_passwords:
+        try:
+            auth = api_request(
+                "POST",
+                "/api/collections/users/auth-with-password",
+                {"identity": EMAIL, "password": candidate},
+            )
+            token = auth.get("token")
+            record = auth.get("record") or {}
+            user_id = record.get("id")
 
-    print(f"Authenticated demo user id: {user_id}")
-    return token, user_id
+            if not token or not user_id:
+                continue
+
+            print(f"Authenticated demo user id: {user_id}")
+            return token, user_id, candidate
+        except Exception:
+            continue
+
+    raise RuntimeError("Unable to authenticate seeded user.")
 
 
 def list_records(collection, token, filter_expr=None):
@@ -154,14 +168,14 @@ def main():
             raise RuntimeError("PocketBase health check failed")
 
         ensure_user()
-        token, user_id = auth_user()
+        token, user_id, effective_password = auth_user()
         ensure_profile(token, user_id)
         ensure_projects(token, user_id)
         ensure_events(token, user_id)
 
         print("\nSeed complete.")
         print(f"Login with: {EMAIL}")
-        print(f"Password: {PASSWORD}")
+        print(f"Password: {effective_password}")
         return 0
     except Exception as error:
         print(f"Seed failed: {error}", file=sys.stderr)

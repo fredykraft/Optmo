@@ -196,6 +196,10 @@ Run this safety checklist before every push:
    git rm -r --cached pb_data pocketbase || true
    ```
 
+4. Automated check on GitHub:
+   - Secret scan runs automatically on every push and pull request via GitHub Actions.
+   - Workflow file: `.github/workflows/secret-scan.yml`
+
 ## 🛠 Tech Stack
 
 - **HTML5** - Semantic structure (467 lines)

@@ -92,7 +92,7 @@ python3 scripts/seed_pocketbase.py
 Default demo credentials:
 
 - Email: `demo@optmo.app`
-- Password: `Demo12345!`
+- Password: printed by the script output (auto-generated unless `SEED_PASSWORD` is provided)
 
 You can customize with env vars:
 
