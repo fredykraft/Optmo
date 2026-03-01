@@ -1,83 +1,185 @@
-# OPTMO Website
+# OPTMO - AI-Powered Automation Platform
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-OPTMO-ff69b4?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/fredykraft)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-OPTMO is a responsive single-page website for an AI-powered automation platform focused on content creation and event organization.
+OPTMO is a responsive, feature-rich single-page website for an AI-powered automation platform. It showcases automation workflows for content creation and event organization with an intuitive UI and interactive features.
 
-## Support OPTMO
+## ✨ Features
 
-- GitHub Sponsors: https://github.com/sponsors/fredykraft
-- Donate Page: https://fredykraft.github.io/Optmo/donate.html
-- PayPal: https://www.paypal.com/donate/?business=saygoodnight88%40gmail.com
+- **Smart Navigation**: Collapsible sidebar with adjustable width (200-450px) and smooth animations
+- **Advanced Search**: Real-time full-page search with highlighting across all content
+- **Project Management**: Filterable project cards with category-based organization
+- **Membership Plans**: Three-tier pricing (Free, Pro, Enterprise)
+- **Cookie Consent**: Privacy-focused consent management with optional analytics
+- **Responsive Design**: Mobile-first approach with proper touch interactions
+- **Performance**: No build step required, pure vanilla JavaScript (zero dependencies)
+- **Accessibility**: Semantic HTML, keyboard navigation, proper ARIA labels
 
-## Overview
+## 🚀 Quick Start
 
-- Content workflows: podcasts, videos, and music production
-- Event workflows: performances, parties, and conferences
-- Membership plans: Free, Pro, and Enterprise
-- Interactive UI: sidebar navigation, section highlighting, project filtering, and cookie consent
+### Prerequisites
+- Git (for cloning)
+- Python 3.x (for local development server)
+- Modern web browser
 
-## Tech Stack
+### Local Development
 
-- HTML5 (`index.html`)
-- CSS3 (`css/styles.css`)
-- Vanilla JavaScript (`js/main.js`)
-- Font Awesome 6.4.0 icons (CDN)
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/fredykraft/Optmo.git
+   cd Optmo
+   ```
 
-## Project Structure
+2. Start a local development server:
+   ```bash
+   # Python 3
+   python -m http.server 8000
+   
+   # Or Python 2
+   python -m SimpleHTTPServer 8000
+   ```
+
+3. Open your browser and navigate to:
+   ```
+   http://localhost:8000
+   ```
+
+## 📁 Project Structure
 
 ```
 .
-├── index.html
-├── donate.html
+├── index.html                 # Main single-page application
+├── donate.html                # Donation/support page
+├── README.md                  # This file
+├── LICENSE                    # MIT License
+├── .gitignore                 # Git ignore rules
 ├── css/
-│   └── styles.css
+│   └── styles.css             # Complete styling (2000+ lines)
 ├── js/
-│   └── main.js
-├── assets/
-├── README.md
-└── README_NEW.md
+│   ├── main.js                # Core functionality (580+ lines)
+│   ├── private-config.js      # ⚠️ Local configuration (NOT committed)
+│   └── private-config.example.js  # Configuration template
+└── assets/                    # Images and media
 ```
 
-## Local Development
+## 🔒 Security & Privacy
 
-1. Open this folder in VS Code.
-2. Start a static server:
+### No Sensitive Data in Version Control
 
-```bash
-python -m http.server 8000
-```
+This project follows security best practices:
 
-3. Visit `http://localhost:8000`.
+- **Private Configuration** (`js/private-config.js`) is **never committed** to GitHub
+  - Listed in `.gitignore` for protection
+  - Contains only local analytics password
+  - Template provided in `private-config.example.js`
 
-## Included Interactions
+- **No hardcoded secrets** in public code
+  - API keys, tokens, and passwords are excluded
+  - Email addresses on donation page are intentionally public for support
 
-- Sidebar open/close with overlay support
-- Account menu dropdown toggle
-- Scroll-based active navigation state
-- Project card filtering by type
-- Smooth scrolling for internal anchor links
-- Cookie consent storage in `localStorage`
+### Setup Private Configuration
 
-## Donate Page
+1. Copy the example file:
+   ```bash
+   cp js/private-config.example.js js/private-config.js
+   ```
 
-- Public support page is available at `donate.html`.
-- When hosted on GitHub Pages, visitors can open `/donate.html`.
+2. Edit `js/private-config.js` and set your own password:
+   ```javascript
+   window.OPTMO_ANALYTICS_PASSWORD = 'your-secure-password-here';
+   ```
 
-## Secure Analytics Password Setup
+3. Never commit this file - it's protected by `.gitignore`
 
-1. Copy `js/private-config.example.js` to `js/private-config.js`.
-2. Set `window.OPTMO_ANALYTICS_PASSWORD` in `js/private-config.js`.
-3. Keep `js/private-config.js` uncommitted (already ignored by `.gitignore`).
+## 🛠 Tech Stack
 
-This keeps the analytics password out of GitHub history.
+- **HTML5** - Semantic structure (467 lines)
+- **CSS3** - Modern styling with custom properties, Flexbox, Grid (2000+ lines)
+- **Vanilla JavaScript** - Zero dependencies, no frameworks (580+ lines)
+- **Font Awesome 6.4.0** - Icon library (CDN)
 
-## Notes
+## 📖 Key Interactions
 
-- The website is fully static and requires no build step.
-- Analytics hooks in `js/main.js` are placeholders for real tracking integrations.
-- For production-grade secrecy, validate passwords server-side (client-side static code cannot fully hide secrets from end users).
+### Navigation
+- **Sidebar Toggle**: Open/close main navigation menu
+- **Adjustable Sidebar**: Drag the right edge to resize (200-450px)
+- **Smooth Scrolling**: Anchor links with header offset compensation
+- **Active States**: Navigation highlights current section
+
+### Search
+- **Real-time Search**: Type to find content across entire page
+- **Smart Highlighting**: Gold highlights with pulse animation
+- **Results Panel**: Shows count and affected sections
+- **Keyboard Shortcut**: `Cmd+K` / `Ctrl+K` to focus search
+
+### Content
+- **Project Filtering**: Filter cards by category (Content, Events, Tools)
+- **Cookie Banner**: Privacy-first consent management
+- **Analytics Protection**: Optional password-gated analytics tracking
+
+### UX Features
+- **Back-to-Top Button**: Appears after scrolling 300px
+- **Scroll Progress Bar**: Visual progress indicator at top of page
+- **Toast Notifications**: Non-intrusive feedback messages
+- **Copy-to-Clipboard**: One-click email copying on donation page
+
+## 📱 Responsive Design
+
+- **Desktop**: Full sidebar navigation, multi-column layouts
+- **Tablet**: Optimized spacing, touch-friendly interactions
+- **Mobile**: Overlay sidebar, single-column content, tap targets
+
+## 💰 Support OPTMO
+
+If you'd like to support OPTMO development:
+
+- **GitHub Sponsors**: [Sponsor fredykraft](https://github.com/sponsors/fredykraft)
+- **PayPal**: saygoodnight88@gmail.com
+- **Zelle**: saygoodnight88@gmail.com
+- **Direct Support**: Visit [Donation Page](donate.html)
+
+## 📝 License
+
+This project is licensed under the [MIT License](LICENSE) - see LICENSE file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 Development Notes
+
+### Analytics
+- Password validation is client-side (for demonstration)
+- For production, implement server-side verification
+- Analytics hooks are placeholders - integrate with your service
+
+### Cookie Management
+- Preferences stored in `localStorage`
+- `optmo-analytics-enabled` key for tracking consent
+- No third-party trackers by default
+
+### Browser Compatibility
+- Modern features: CSS custom properties, Flexbox, Grid
+- Supports: Chrome, Firefox, Safari, Edge (latest versions)
+- Mobile browsers: iOS Safari 12+, Chrome Mobile
+
+## 👨‍💻 Author
+
+**fredykraft** - Original creator and maintainer
+
+## 🙏 Acknowledgments
+
+- Font Awesome for icon library
+- Community feedback for feature improvements
 
 ---
 
-Last updated: February 28, 2026
+**Last updated**: February 28, 2026  
+**Version**: 1.0.0

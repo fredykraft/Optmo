@@ -20,7 +20,8 @@
         <div class="header-center">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search projects, content...">
+                <input type="text" id="searchInput" placeholder="Search projects, content...">
+                <div class="search-results" id="searchResults" style="display: none;"></div>
             </div>
         </div>
         <div class="header-right">
@@ -52,7 +53,6 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 class="sidebar-logo">OPTMO</h2>
             <button class="close-btn" id="closeSidebar" title="Close Menu">
                 <i class="fas fa-times"></i>
             </button>
@@ -131,6 +131,9 @@
                 <button class="premium-btn" onclick="window.location.href='#pricing'">Upgrade to Pro</button>
             </div>
         </div>
+        
+        <!-- Sidebar Resize Handle -->
+        <div class="sidebar-resize-handle" id="sidebarResizeHandle" title="Drag to resize sidebar"></div>
     </aside>
 
     <!-- Main Content Wrapper -->
@@ -407,7 +410,7 @@
                             <li><a href="#about">About Us</a></li>
                             <li><a href="#portfolio">Projects</a></li>
                             <li><a href="#home">Get Started</a></li>
-                            <li><a href="donate.html">Donate</a></li>
+                            <li><a href="donate.html">Support OPTMO</a></li>
                         </ul>
                     </div>
                     <div class="footer-section">
@@ -417,7 +420,6 @@
                             <li><a href="#about">Documentation</a></li>
                             <li><a href="#pricing">API Access</a></li>
                             <li><a href="#about">System Status</a></li>
-                            <li><a href="donate.html">Support OPTMO</a></li>
                         </ul>
                     </div>
                 </div>
@@ -431,21 +433,31 @@
     <!-- Overlay for mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTopBtn" title="Back to Top" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+
     <!-- Cookie Consent Notice -->
     <div class="cookie-notice" id="cookieNotice">
         <p>
             <strong>🍪 We use cookies to enhance your experience</strong><br>
-            OPTMO always uses essential cookies for core functionality. Optional analytics runs only when consent is accepted and the analytics password is provided.
+            OPTMO uses essential cookies for core functionality. You can optionally enable analytics.
             <a href="#home">Learn more</a>
         </p>
-        <div class="cookie-auth">
-            <label for="analyticsPassword">Analytics Password</label>
-            <input type="password" id="analyticsPassword" placeholder="Enter analytics password" autocomplete="off">
-            <small id="cookieStatus" aria-live="polite"></small>
-        </div>
         <div class="cookie-buttons">
-            <button class="cookie-btn decline" id="declineCookies">Decline</button>
-            <button class="cookie-btn accept" id="acceptCookies">Accept All</button>
+            <button class="cookie-btn decline" id="declineCookies">Decline Analytics</button>
+            <button class="cookie-btn accept" id="acceptCookies">Accept & Continue</button>
+            <button class="cookie-btn analytics-btn" id="enableAnalyticsBtn">Enable Analytics</button>
+        </div>
+        <div class="cookie-auth" id="analyticsAuthSection" style="display: none;">
+            <label for="analyticsPassword">Analytics Password (Optional)</label>
+            <input type="password" id="analyticsPassword" placeholder="Enter analytics password to enable" autocomplete="off">
+            <small id="cookieStatus" aria-live="polite"></small>
+            <button class="cookie-btn accept" id="submitAnalyticsBtn">Confirm Analytics</button>
         </div>
     </div>
 

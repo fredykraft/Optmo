@@ -15,7 +15,7 @@
         </div>
         <div class="header-center"></div>
         <div class="header-right">
-            <a href="index.html" class="plan-btn" style="padding: 8px 16px; width: auto;">Back to Home</a>
+            <a href="index.html" class="plan-btn" style="padding: 6px 12px; font-size: 12px; width: auto;">Back to Home</a>
         </div>
     </header>
 
@@ -31,35 +31,36 @@
 
         <section class="analysis-section">
             <div class="container">
-                <h2 class="section-title">Choose a Donation Method</h2>
+                <p style="text-align: center; margin-bottom: 40px; color: var(--text-light); font-size: 16px;">Choose a payment method to support us</p>
                 <div class="analysis-grid pricing-grid">
                     <div class="analysis-card pricing-card">
-                        <div class="plan-header">
-                            <i class="fab fa-github" style="font-size: 32px; color: var(--primary-color); margin-bottom: 16px;"></i>
-                            <h4>GitHub Sponsors</h4>
-                            <p>Support development directly through GitHub.</p>
-                        </div>
-                        <a href="https://github.com/sponsors/fredykraft" target="_blank" rel="noopener noreferrer" class="plan-btn pro-btn">Open GitHub Sponsors</a>
+                        <i class="fab fa-paypal" style="font-size: 32px; color: #0070ba; margin-bottom: 12px;"></i>
+                        <h4 style="margin-bottom: 12px;">PayPal</h4>
+                        <p style="margin-bottom: 16px; font-size: 13px; color: var(--text-light);">saygoodnight88@gmail.com</p>
+                        <a href="https://www.paypal.com/donate/?business=saygoodnight88%40gmail.com" target="_blank" rel="noopener noreferrer" class="plan-btn pro-btn">Donate Now</a>
                     </div>
 
                     <div class="analysis-card pricing-card featured-plan">
-                        <div class="plan-badge"><i class="fas fa-heart"></i> COMMUNITY</div>
-                        <div class="plan-header">
-                            <i class="fas fa-hand-holding-heart" style="font-size: 32px; color: var(--secondary-color); margin-bottom: 16px;"></i>
-                            <h4>PayPal Donation</h4>
-                            <p>Send support via PayPal to: <strong>saygoodnight88@gmail.com</strong></p>
-                        </div>
-                        <a href="https://www.paypal.com/donate/?business=saygoodnight88%40gmail.com" target="_blank" rel="noopener noreferrer" class="plan-btn">Donate with PayPal</a>
+                        <div class="plan-badge"><i class="fas fa-heart"></i> POPULAR</div>
+                        <i class="fas fa-university" style="font-size: 32px; color: var(--secondary-color); margin-bottom: 12px;"></i>
+                        <h4 style="margin-bottom: 12px;">Zelle</h4>
+                        <p style="margin-bottom: 16px; font-size: 13px; color: var(--text-light);">saygoodnight88@gmail.com</p>
+                        <a href="mailto:saygoodnight88@gmail.com?subject=Zelle%20Support%20for%20OPTMO" class="plan-btn">Send Now</a>
                     </div>
 
                     <div class="analysis-card pricing-card">
-                        <div class="plan-header">
-                            <i class="fas fa-briefcase" style="font-size: 32px; color: var(--primary-color); margin-bottom: 16px;"></i>
-                            <h4>Zelle Transfer</h4>
-                            <p>Send support via Zelle to: <strong>saygoodnight88@gmail.com</strong></p>
-                        </div>
-                        <a href="mailto:saygoodnight88@gmail.com?subject=Zelle%20Support%20for%20OPTMO" class="plan-btn">Use This Zelle Email</a>
+                        <i class="fab fa-github" style="font-size: 32px; color: var(--primary-color); margin-bottom: 12px;"></i>
+                        <h4 style="margin-bottom: 12px;">GitHub Sponsors</h4>
+                        <p style="margin-bottom: 16px; font-size: 13px; color: var(--text-light);">Direct support on GitHub</p>
+                        <a href="https://github.com/sponsors/fredykraft" target="_blank" rel="noopener noreferrer" class="plan-btn">Sponsor</a>
                     </div>
+                </div>
+
+                <div style="margin-top: 50px; padding: 20px; background: var(--neutral-light); border-radius: 6px; text-align: center;">
+                    <p style="margin: 0 0 12px 0; color: var(--text-dark);"><strong>Email addresses:</strong> saygoodnight88@gmail.com</p>
+                    <button id="copyEmailBtn" style="background: var(--primary-color); color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s;" title="Click to copy email">
+                        <i class="fas fa-copy"></i> Copy Email
+                    </button>
                 </div>
             </div>
         </section>
@@ -86,5 +87,27 @@
             </div>
         </footer>
     </main>
+    
+    <script>
+        // Copy email to clipboard
+        const copyEmailBtn = document.getElementById('copyEmailBtn');
+        if (copyEmailBtn) {
+            copyEmailBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText('saygoodnight88@gmail.com');
+                    const originalText = copyEmailBtn.innerHTML;
+                    copyEmailBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    copyEmailBtn.style.background = '#4caf50';
+                    
+                    setTimeout(() => {
+                        copyEmailBtn.innerHTML = originalText;
+                        copyEmailBtn.style.background = 'var(--primary-color)';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy email:', err);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

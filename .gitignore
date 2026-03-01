@@ -1,10 +1,25 @@
+# OS Files
 .DS_Store
-js/private-config.js
+.DS_Store?
+._*
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vim/
+*.swp
+*.swo
+*~
+
+# Environment Variables & Secrets (CRITICAL - NEVER COMMIT)
 .env
-.env.*
-*.local
-*.secret
-*.secrets
+.env.local
+.env.*.local
+js/private-config.js
+
+# Credentials & Keys (CRITICAL - NEVER COMMIT)
 *.key
 *.pem
 *.p12
@@ -14,3 +29,25 @@ js/private-config.js
 *.jks
 id_rsa
 id_ed25519
+id_rsa.pub
+id_ed25519.pub
+.ssh/
+
+# Build & Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+dist/
+build/
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Temporary Files
+*.bak
+*.tmp
+.cache/
