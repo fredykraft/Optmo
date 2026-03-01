@@ -11,6 +11,9 @@ OPTMO is a responsive, feature-rich single-page website for an AI-powered automa
 - **Advanced Search**: Real-time full-page search with highlighting across all content
 - **Project Management**: Filterable project cards with category-based organization
 - **Membership Plans**: Three-tier pricing (Free, Pro, Enterprise)
+- **User Authentication**: Email/password signup and login with PocketBase
+- **User Dashboards**: Account management with profile, plan, and settings
+- **Behavior Analytics**: Automatic event tracking and user analytics
 - **Cookie Consent**: Privacy-focused consent management with optional analytics
 - **Responsive Design**: Mobile-first approach with proper touch interactions
 - **Performance**: No build step required, pure vanilla JavaScript (zero dependencies)
@@ -45,22 +48,103 @@ OPTMO is a responsive, feature-rich single-page website for an AI-powered automa
    http://localhost:8000
    ```
 
-## 📁 Project Structure
+## � User Authentication & Database
+
+OPTMO includes a complete authentication system with user management and behavior analytics powered by **PocketBase**.
+
+### Features
+
+- ✅ Email/password signup and login
+- ✅ User profile management (name, company, avatar)
+- ✅ Automatic behavior tracking and analytics
+- ✅ Project management with event logging
+- ✅ Real-time analytics dashboard
+- ✅ Account settings and preferences
+
+### Quick Setup for Testing
+
+1. **Download PocketBase** from [https://pocketbase.io/](https://pocketbase.io/)
+
+2. **Run PocketBase**:
+   ```bash
+   cd Optmo
+   pocketbase serve --dir ./pb_data
+   
+   # Or use the helper script:
+   bash start-pocketbase.sh
+   ```
+
+3. **Configure Database**:
+   - Open [http://localhost:8090](http://localhost:8090) in your browser
+   - Create an admin account
+   - Migrations auto-create collections on startup (`users`, `user_profiles`, `projects`, `user_events`)
+   - See [POCKETBASE_SETUP.md](POCKETBASE_SETUP.md) for verification steps
+   - Configure CORS for `http://localhost:8000`
+
+4. **Test Authentication**:
+   - Go to [http://localhost:8000/login.html](http://localhost:8000/login.html)
+   - Sign up or log in with your test account
+   - Verify redirect to [http://localhost:8000/account.html](http://localhost:8000/account.html)
+   - Visit [http://localhost:8000/test-pocketbase.html](http://localhost:8000/test-pocketbase.html) to verify setup
+   - (Optional) Run `python3 scripts/seed_pocketbase.py` to create a demo account and sample analytics data
+
+### PocketBase Architecture
+
+```
+Frontend (Vanilla JS)
+    ↓ HTTP API Calls
+PocketBase Server (localhost:8090)
+    ↓
+SQLite Database
+    ├─ users (authentication & profiles)
+    ├─ user_events (behavior tracking)
+    └─ projects (user projects)
+```
+
+### Key Files
+
+- **[POCKETBASE_SETUP.md](POCKETBASE_SETUP.md)** - Complete setup and deployment guide
+- **[SETUP_SUMMARY.md](SETUP_SUMMARY.md)** - What's implemented and what's next
+- **[js/pocketbase-client.js](js/pocketbase-client.js)** - PocketBase integration library
+- **[test-pocketbase.html](test-pocketbase.html)** - Connection test utility
+- **[login.html](login.html)** - Login and signup interface
+- **[account.html](account.html)** - User dashboard
+
+### Deployment
+
+For production use, deploy PocketBase to:
+- **Railway** (recommended, $5/month)
+- **Render** (similar to Railway)
+- **DigitalOcean** (most control, $5/month and up)
+- **Your own VPS** (most affordable, $2-5/month)
+
+See [POCKETBASE_SETUP.md](POCKETBASE_SETUP.md#next-steps) for deployment options.
+
+## �📁 Project Structure
 
 ```
 .
-├── index.html                 # Main single-page application
-├── donate.html                # Donation/support page
-├── README.md                  # This file
-├── LICENSE                    # MIT License
-├── .gitignore                 # Git ignore rules
+├── index.html                      # Main single-page application
+├── donate.html                     # Donation/support page
+├── login.html                      # User login and signup page
+├── account.html                    # User dashboard and settings
+├── test-pocketbase.html            # PocketBase connection test utility
+├── POCKETBASE_SETUP.md             # Detailed PocketBase setup guide
+├── SETUP_SUMMARY.md                # Implementation summary and checklist
+├── start-pocketbase.sh             # Helper script to start PocketBase
+├── scripts/
+│   └── seed_pocketbase.py          # One-click PocketBase demo data seeding
+├── README.md                       # This file
+├── LICENSE                         # MIT License
+├── .gitignore                      # Git ignore rules
 ├── css/
-│   └── styles.css             # Complete styling (2000+ lines)
+│   └── styles.css                  # Complete styling (2000+ lines)
 ├── js/
-│   ├── main.js                # Core functionality (580+ lines)
-│   ├── private-config.js      # ⚠️ Local configuration (NOT committed)
-│   └── private-config.example.js  # Configuration template
-└── assets/                    # Images and media
+│   ├── main.js                     # Core functionality (600+ lines)
+│   ├── pocketbase-client.js        # PocketBase integration library (180+ lines)
+│   ├── private-config.js           # ⚠️ Local configuration (NOT committed)
+│   └── private-config.example.js   # Configuration template
+└── assets/                         # Images and media
 ```
 
 ## 🔒 Security & Privacy
@@ -91,6 +175,26 @@ This project follows security best practices:
    ```
 
 3. Never commit this file - it's protected by `.gitignore`
+
+### Before Publishing to GitHub
+
+Run this safety checklist before every push:
+
+1. Verify local-only files are not tracked:
+   ```bash
+   git check-ignore -v js/private-config.js pb_data/ pocketbase/
+   ```
+
+2. Run the secret scanner:
+   ```bash
+   ./scripts/scan_secrets.sh
+   ```
+
+3. If a private file was accidentally tracked earlier, untrack it:
+   ```bash
+   git rm --cached js/private-config.js || true
+   git rm -r --cached pb_data pocketbase || true
+   ```
 
 ## 🛠 Tech Stack
 

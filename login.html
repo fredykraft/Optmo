@@ -218,12 +218,9 @@
                 </div>
 
                 <div class="demo-notice">
-                    <strong>📝 Demo Mode</strong><br>
-                    This is a demo login. Use any email and password to test.
-                    <div class="demo-credentials">
-                        Email: demo@optmo.com<br>
-                        Password: demo
-                    </div>
+                    <strong>🔐 Secure Login</strong><br>
+                    Sign in with your account credentials. If the email doesn't exist yet,
+                    OPTMO will create your account automatically.
                 </div>
 
                 <form id="loginForm">
@@ -253,16 +250,22 @@
     </main>
 
     <script src="js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.0/dist/pocketbase.umd.js"></script>
+    <script src="js/pocketbase-client.js"></script>
     <script>
-        // Simple demo login system
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // PocketBase Login Handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
+            const submitBtn = document.querySelector('.login-btn');
 
-            // Simple validation for demo
+            // Clear previous errors
+            errorDiv.classList.remove('show');
+
+            // Simple validation
             if (!email || !password) {
                 errorDiv.textContent = 'Please fill in all fields.';
                 errorDiv.classList.add('show');
@@ -281,19 +284,58 @@
                 return;
             }
 
-            // Store login info in localStorage for demo
-            const user = {
-                email: email,
-                displayName: email.split('@')[0],
-                loginTime: new Date().toISOString(),
-                accountTier: 'free'
-            };
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Logging in...';
 
-            localStorage.setItem('optmo_user', JSON.stringify(user));
-            localStorage.setItem('optmo_logged_in', 'true');
+            try {
+                // Try to login
+                const result = await loginUser(email, password);
 
-            // Redirect to account page
-            window.location.href = 'account.html';
+                if (result.success) {
+                    // Show success message
+                    errorDiv.textContent = '✓ Login successful! Redirecting...';
+                    errorDiv.style.borderLeftColor = '#10b981';
+                    errorDiv.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                    errorDiv.style.color = '#047857';
+                    errorDiv.classList.add('show');
+
+                    // Redirect after 1 second
+                    setTimeout(() => {
+                        window.location.href = 'account.html';
+                    }, 1000);
+                } else {
+                    // Try signup if user doesn't exist
+                    if (result.error.includes('Failed to authenticate')) {
+                        // User doesn't exist, prompt to create account
+                        const displayName = email.split('@')[0];
+                        const signupResult = await signUpUser(email, password, displayName);
+
+                        if (signupResult.success) {
+                            errorDiv.textContent = '✓ Account created! Redirecting...';
+                            errorDiv.style.borderLeftColor = '#10b981';
+                            errorDiv.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+                            errorDiv.style.color = '#047857';
+                            errorDiv.classList.add('show');
+
+                            setTimeout(() => {
+                                window.location.href = 'account.html';
+                            }, 1000);
+                        } else {
+                            throw new Error(signupResult.error);
+                        }
+                    } else {
+                        throw new Error(result.error);
+                    }
+                }
+            } catch (error) {
+                errorDiv.textContent = '❌ ' + (error.message || 'Login failed. Please try again.');
+                errorDiv.classList.add('show');
+                console.error('Auth error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔐 Login to Account';
+            }
         });
     </script>
 </body>

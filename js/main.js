@@ -580,8 +580,18 @@ function initSidebarResize() {
 }
 
 // Logout function for homepage
-function logoutFromHome() {
+async function logoutFromHome() {
     if (confirm('Are you sure you want to logout?')) {
+        try {
+            // Try PocketBase logout first (if available)
+            if (typeof logoutUser === 'function') {
+                await logoutUser();
+            }
+        } catch (e) {
+            console.log('PocketBase logout not available');
+        }
+        
+        // Always clear localStorage as fallback
         localStorage.removeItem('optmo_logged_in');
         localStorage.removeItem('optmo_user');
         location.reload();

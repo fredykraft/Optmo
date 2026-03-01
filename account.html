@@ -492,26 +492,45 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.0/dist/pocketbase.umd.js"></script>
+    <script src="js/pocketbase-client.js"></script>
     <script src="js/main.js"></script>
     <script>
         // Check if user is logged in
-        window.addEventListener('load', function() {
-            const isLoggedIn = localStorage.getItem('optmo_logged_in');
-            const user = JSON.parse(localStorage.getItem('optmo_user'));
+        window.addEventListener('load', async function() {
+            const user = getCurrentUser();
 
-            if (!isLoggedIn || !user) {
+            if (!user) {
                 document.getElementById('notLoggedIn').style.display = 'grid';
                 document.getElementById('loggedInContent').style.display = 'none';
             } else {
                 document.getElementById('notLoggedIn').style.display = 'none';
                 document.getElementById('loggedInContent').style.display = 'grid';
                 
+                // Load extended profile details
+                const profileResult = await getUserProfile(user.id);
+                const profile = profileResult.success ? profileResult.profile : user;
+
                 // Update profile info
-                document.getElementById('profileName').textContent = user.displayName || 'User';
-                document.getElementById('profileEmail').textContent = user.email;
-                document.getElementById('displayEmail').textContent = user.email;
-                document.getElementById('displayName').value = user.displayName || user.email.split('@')[0];
+                document.getElementById('profileName').textContent = profile.display_name || profile.name || 'User';
+                document.getElementById('profileEmail').textContent = profile.email;
+                document.getElementById('displayEmail').textContent = profile.email;
+                document.getElementById('displayName').value = profile.display_name || profile.name || profile.email.split('@')[0];
+                document.getElementById('fullName').value = profile.full_name || '';
+                document.getElementById('company').value = profile.company || '';
                 document.getElementById('avatarInitial').textContent = (user.email.charAt(0)).toUpperCase();
+
+                // Load analytics
+                try {
+                    const analyticsResult = await getUserAnalytics(user.id);
+                    if (analyticsResult.success) {
+                        document.querySelector('.stat-value:nth-child(1)').textContent = analyticsResult.analytics.total_projects || '0';
+                        document.querySelector('.stat-value:nth-child(2)').textContent = analyticsResult.analytics.total_events || '0';
+                        document.querySelector('.stat-value:nth-child(3)').textContent = analyticsResult.analytics.total_logins || '0';
+                    }
+                } catch (error) {
+                    console.log('Analytics loading:', error.message);
+                }
             }
         });
 
@@ -527,33 +546,57 @@
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
         }
 
-        function saveProfile() {
-            const user = JSON.parse(localStorage.getItem('optmo_user'));
-            user.displayName = document.getElementById('displayName').value;
-            user.fullName = document.getElementById('fullName').value;
-            user.company = document.getElementById('company').value;
+        async function saveProfile() {
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Please login first');
+                return;
+            }
 
-            localStorage.setItem('optmo_user', JSON.stringify(user));
+            try {
+                const updates = {
+                    name: document.getElementById('displayName').value,
+                    full_name: document.getElementById('fullName').value,
+                    company: document.getElementById('company').value
+                };
 
-            alert('Profile updated successfully!');
-            location.reload();
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('optmo_logged_in');
-                localStorage.removeItem('optmo_user');
-                window.location.href = 'index.html';
+                const result = await updateUserProfile(user.id, updates);
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to update profile');
+                }
+                alert('✓ Profile updated successfully!');
+                location.reload();
+            } catch (error) {
+                alert('❌ Error updating profile: ' + error.message);
             }
         }
 
-        function deleteAccount() {
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await logoutUser();
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        async function deleteAccount() {
             if (confirm('⚠️ Are you SURE? This will permanently delete your account and all data. This cannot be undone.')) {
                 if (confirm('Click OK again to confirm account deletion.')) {
-                    localStorage.removeItem('optmo_logged_in');
-                    localStorage.removeItem('optmo_user');
-                    alert('Your account has been deleted.');
-                    window.location.href = 'index.html';
+                    try {
+                        const user = getCurrentUser();
+                        if (user) {
+                            await pb.collection('users').delete(user.id);
+                            await logoutUser();
+                            alert('Your account has been deleted.');
+                        }
+                        window.location.href = 'index.html';
+                    } catch (error) {
+                        alert('Error deleting account: ' + error.message);
+                    }
                 }
             }
         }

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PocketBase Connection Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .status-check {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+            background: #f9f9f9;
+        }
+
+        .status-check.loading {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+
+        .status-check.success {
+            border-left-color: #28a745;
+            background: #f0f8f5;
+        }
+
+        .status-check.error {
+            border-left-color: #dc3545;
+            background: #fdf5f5;
+        }
+
+        .status-label {
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .status-message {
+            font-size: 13px;
+            margin-top: 8px;
+            color: #666;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .success-text {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .test-button:hover {
+            background: #764ba2;
+        }
+
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        .next-steps {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .next-steps h3 {
+            color: #17a2b8;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .next-steps ol {
+            margin-left: 20px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .next-steps li {
+            margin-bottom: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 PocketBase Connection Test</h1>
+
+        <!-- PocketBase Server Check -->
+        <div class="status-check loading" id="pbServerCheck">
+            <div class="status-label">
+                <span class="status-icon">⏳</span>
+                PocketBase Server
+            </div>
+            <div class="status-message">Checking connection to localhost:8090...</div>
+        </div>
+
+        <!-- PocketBase SDK Check -->
+        <div class="status-check loading" id="pbSdkCheck">
+            <div class="status-label">
+                <span class="status-icon">⏳</span>
+                PocketBase SDK
+            </div>
+            <div class="status-message">Loading SDK from CDN...</div>
+        </div>
+
+        <!-- Collections Check -->
+        <div class="status-check loading" id="collectionsCheck">
+            <div class="status-label">
+                <span class="status-icon">⏳</span>
+                Database Collections
+            </div>
+            <div class="status-message">Checking required collections...</div>
+        </div>
+
+        <!-- Authentication Check -->
+        <div class="status-check loading" id="authCheck">
+            <div class="status-label">
+                <span class="status-icon">⏳</span>
+                Authentication System
+            </div>
+            <div class="status-message">Checking authentication availability...</div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="section">
+            <div class="section-title">📊 Database Statistics</div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="userCount">-</div>
+                    <div class="stat-label">Users Created</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="eventCount">-</div>
+                    <div class="stat-label">Events Logged</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Authentication -->
+        <div class="section">
+            <div class="section-title">🧪 Test Authentication</div>
+            <p style="font-size: 13px; color: #666; margin-bottom: 10px;">
+                Create a test account and verify PocketBase authentication works:
+            </p>
+            <button class="test-button" id="testAuthBtn">Test Sign Up & Login</button>
+            <div id="authTestResult"></div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h3>✓ Getting Started</h3>
+            <ol>
+                <li><strong>PocketBase running?</strong> Execute: <code>./pocketbase serve</code></li>
+                <li><strong>Collections created?</strong> Set up schema in Admin UI</li>
+                <li><strong>All checks pass?</strong> You're ready to test login!</li>
+                <li><strong>Issues?</strong> Check POCKETBASE_SETUP.md troubleshooting</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.0/dist/pocketbase.umd.js"></script>
+    <script>
+        let pb = null;
+
+        // Helper function to update status
+        function updateStatus(elementId, status, message, details = '') {
+            const element = document.getElementById(elementId);
+            const icon = element.querySelector('.status-icon');
+            
+            element.classList.remove('loading', 'success', 'error');
+            element.classList.add(status);
+
+            if (status === 'loading') {
+                icon.textContent = '⏳';
+            } else if (status === 'success') {
+                icon.textContent = '✅';
+            } else if (status === 'error') {
+                icon.textContent = '❌';
+            }
+
+            element.querySelector('.status-message').innerHTML = message + (details ? `<div style="margin-top: 5px; font-size: 12px; color: #666;">${details}</div>` : '');
+        }
+
+        // Check PocketBase Server
+        async function checkPocketBaseServer() {
+            try {
+                const response = await fetch('http://localhost:8090/api/health', { 
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+                updateStatus('pbServerCheck', 'success', 'PocketBase server is running ✓', 'http://localhost:8090');
+                return true;
+            } catch (error) {
+                updateStatus('pbServerCheck', 'error', 
+                    '<span class="error-text">PocketBase server not found</span>', 
+                    'Make sure PocketBase is running: <code>./pocketbase serve</code>'
+                );
+                return false;
+            }
+        }
+
+        // Check PocketBase SDK
+        async function checkPocketBaseSDK() {
+            try {
+                if (typeof PocketBase === 'undefined') {
+                    throw new Error('PocketBase SDK not loaded');
+                }
+                pb = new PocketBase('http://localhost:8090');
+                updateStatus('pbSdkCheck', 'success', 'PocketBase SDK loaded ✓', 'Version: 0.21.0');
+                return true;
+            } catch (error) {
+                updateStatus('pbSdkCheck', 'error', 
+                    '<span class="error-text">Failed to load PocketBase SDK</span>', 
+                    error.message
+                );
+                return false;
+            }
+        }
+
+        // Check Collections
+        async function checkCollections() {
+            if (!pb) {
+                updateStatus('collectionsCheck', 'error', 'Cannot check: SDK not loaded');
+                return false;
+            }
+
+            try {
+                const collections = await pb.collections.getFullList();
+                const requiredCollections = ['users', 'user_events', 'projects'];
+                const foundCollections = collections.map(c => c.name);
+                const missingCollections = requiredCollections.filter(c => !foundCollections.includes(c));
+
+                if (missingCollections.length > 0) {
+                    updateStatus('collectionsCheck', 'error',
+                        '<span class="error-text">Missing collections</span>',
+                        `Required: ${requiredCollections.join(', ')}<br>Found: ${foundCollections.join(', ')}`
+                    );
+                    return false;
+                } else {
+                    updateStatus('collectionsCheck', 'success',
+                        'All required collections found ✓',
+                        `Collections: ${foundCollections.join(', ')}`
+                    );
+                    return true;
+                }
+            } catch (error) {
+                updateStatus('collectionsCheck', 'error',
+                    '<span class="error-text">Failed to check collections</span>',
+                    error.message
+                );
+                return false;
+            }
+        }
+
+        // Check Authentication
+        async function checkAuthentication() {
+            if (!pb) {
+                updateStatus('authCheck', 'error', 'Cannot check: SDK not loaded');
+                return false;
+            }
+
+            try {
+                const authMethods = await pb.collection('users').listAuthMethods();
+                updateStatus('authCheck', 'success',
+                    'Authentication system ready ✓',
+                    `Auth methods available: ${authMethods.mightCreateUser ? 'Yes' : 'No'}`
+                );
+                return true;
+            } catch (error) {
+                updateStatus('authCheck', 'error',
+                    '<span class="error-text">Authentication check failed</span>',
+                    error.message
+                );
+                return false;
+            }
+        }
+
+        // Load Statistics
+        async function loadStatistics() {
+            if (!pb) return;
+
+            try {
+                const usersCount = await pb.collection('users').getFullList({ fields: 'id' });
+                const eventsCount = await pb.collection('user_events').getFullList({ fields: 'id' });
+                
+                document.getElementById('userCount').textContent = usersCount.length;
+                document.getElementById('eventCount').textContent = eventsCount.length;
+            } catch (error) {
+                console.log('Statistics unavailable yet');
+            }
+        }
+
+        // Test Authentication Flow
+        async function testAuthentication() {
+            const btn = document.getElementById('testAuthBtn');
+            const resultDiv = document.getElementById('authTestResult');
+            btn.disabled = true;
+            btn.textContent = '⏳ Testing...';
+
+            try {
+                if (!pb) {
+                    throw new Error('PocketBase SDK not loaded');
+                }
+
+                const testEmail = `test_${Date.now()}@example.com`;
+                const testPassword = 'Test@123';
+
+                // Try creating account
+                resultDiv.innerHTML = '<div class="status-check loading" style="margin-top: 15px;"><div class="status-message">Creating test account...</div></div>';
+
+                const newUser = await pb.collection('users').create({
+                    email: testEmail,
+                    password: testPassword,
+                    passwordConfirm: testPassword,
+                    name: 'Test User'
+                });
+
+                resultDiv.innerHTML = '<div class="status-check success" style="margin-top: 15px;"><div class="status-label"><span class="status-icon">✅</span>Test Successful!</div><div class="status-message">Account created safely with ID: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">' + newUser.id + '</code></div></div>';
+
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="status-check error" style="margin-top: 15px;"><div class="status-label"><span class="status-icon">❌</span>Test Failed</div><div class="status-message">' + error.message + '</div></div>';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test Sign Up & Login';
+            }
+        }
+
+        // Run all checks on page load
+        async function runAllChecks() {
+            await checkPocketBaseServer();
+            await checkPocketBaseSDK();
+            await checkCollections();
+            await checkAuthentication();
+            await loadStatistics();
+        }
+
+        document.getElementById('testAuthBtn').addEventListener('click', testAuthentication);
+
+        // Start checks when page loads
+        window.addEventListener('load', runAllChecks);
+    </script>
+</body>
+</html>
