@@ -8,6 +8,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <style>
+        body {
+            background: var(--neutral-light);
+        }
+
+        .top-header {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+        }
+
+        .header-left .logo-small {
+            font-size: 20px !important;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+        }
+
+        .header-left .logo-small a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .header-left .logo-small a:hover {
+            color: var(--primary-dark);
+        }
+
+        .menu-btn {
+            display: none;
+        }
+
         .account-container {
             display: grid;
             grid-template-columns: 280px 1fr;
